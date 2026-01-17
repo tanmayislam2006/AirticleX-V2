@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -73,7 +74,13 @@ export class PostController {
   @Patch('/:id')
   updatePost(@Body() body: Record<string, any>, @Param('id') id: string) {
     const userid = 'JuY5S9WEPWr19EHXTennC7LvbBt9ORN8';
-    const isAdmin = true;
+    const isAdmin = false;
     return this.postService.updatePost(id, userid, isAdmin, body);
+  }
+  @Delete('/:id')
+  deletePost(@Param('id') id: string) {
+    const userid = 'JuY5S9WEPWr19EHXTennC7LvbBt9ORN8';
+    const isAdmin = false;
+    return this.postService.deletePost(id, userid, isAdmin);
   }
 }
