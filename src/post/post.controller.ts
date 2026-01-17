@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Post as PostModel, PostStatus } from '../generated/prisma/client';
 import paginationHelper, { IOption } from 'src/helpers/paginationHelper';
@@ -46,5 +46,9 @@ export class PostController {
       limit,
       skip,
     });
+  }
+  @Get('/:id')
+  getPostById(@Param('id') id: string) {
+    return this.postService.getPostById(id);
   }
 }

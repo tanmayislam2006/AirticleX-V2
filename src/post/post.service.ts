@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Post, PostStatus } from 'src/generated/prisma/client';
+import { CommentStatus, Post, PostStatus } from 'src/generated/prisma/client';
 import { PostWhereInput } from 'src/generated/prisma/models';
 import { prisma } from 'src/libs/prisma';
 
@@ -107,5 +107,46 @@ export class PostService {
         totalPages: Math.ceil(total / limit),
       },
     };
+  };
+  getPostById = async (id: string) => {
+    return await prisma.$transaction(async (tx) => {
+      const post = await tx.post.findUnique({
+        where: { id },
+        include: {
+          comments: {
+            where: {
+              parentID: null,
+            },
+            orderBy: { createdAt: 'desc' },
+            include: {
+              replies: {
+                where: {
+                  status: CommentStatus.APPROVED,
+                },
+                orderBy: { createdAt: 'asc' },
+                include: {
+                  replies: {
+                    where: {
+                      status: CommentStatus.APPROVED,
+                    },
+                    orderBy: { createdAt: 'asc' },
+                  },
+                },
+              },
+            },
+          },
+          _count: {
+            select: { comments: true },
+          },
+        },
+      });
+      if (post) {
+        await tx.post.update({
+          where: { id },
+          data: { views: { increment: 1 } },
+        });
+      }
+      return post;
+    });
   };
 }
