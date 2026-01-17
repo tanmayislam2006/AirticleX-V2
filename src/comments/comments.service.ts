@@ -18,4 +18,20 @@ export class CommentsService {
     });
     return result;
   };
+  getCommentById = async (id: string) => {
+    return await prisma.comment.findUniqueOrThrow({
+      where: {
+        id,
+      },
+      include: {
+        post: {
+          select: {
+            id: true,
+            title: true,
+            views: true,
+          },
+        },
+      },
+    });
+  };
 }
