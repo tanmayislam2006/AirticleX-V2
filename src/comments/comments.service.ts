@@ -34,4 +34,11 @@ export class CommentsService {
       },
     });
   };
+  getCommentsByAuthor = async (authorID: string) => {
+    return await prisma.comment.findMany({
+      where: {
+        authorID,
+      },
+    });
+  };
 }

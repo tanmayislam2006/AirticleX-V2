@@ -20,4 +20,8 @@ export class CommentsController {
   getCommentById(@Param('commentID') commentID: string) {
     return this.commentService.getCommentById(commentID);
   }
+  @Get('/author/:authorID')
+  getCommentsByAuthor(@Param('authorID') authorID: string) {
+    return this.commentService.getCommentsByAuthor(authorID);
+  }
 }
