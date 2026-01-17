@@ -47,6 +47,13 @@ export class PostController {
       skip,
     });
   }
+  @Get('/my-posts')
+  getMyPost(@Query() query?: IOption) {
+    const { page, limit, skip } = paginationHelper(query as IOption);
+    const id = 'JuY5S9WEPWr19EHXTennC7LvbBt9ORN8';
+
+    return this.postService.getMyPost(id, page, limit, skip);
+  }
   @Get('/:id')
   getPostById(@Param('id') id: string) {
     return this.postService.getPostById(id);

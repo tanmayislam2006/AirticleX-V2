@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CommentStatus, Post, PostStatus } from 'src/generated/prisma/client';
+import {
+  CommentStatus,
+  Post,
+  PostStatus,
+  UserStatus,
+} from 'src/generated/prisma/client';
 import { PostWhereInput } from 'src/generated/prisma/models';
 import { prisma } from 'src/libs/prisma';
 
@@ -148,5 +153,31 @@ export class PostService {
       }
       return post;
     });
+  };
+  getMyPost = async (id: string, page: number, limit: number, skip: number) => {
+    await prisma.user.findUniqueOrThrow({
+      where: {
+        id,
+        status: UserStatus.ACTIVE,
+      },
+    });
+    const result = await prisma.post.findMany({
+      take: limit,
+      skip: skip,
+      where: {
+        authorID: id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    });
+    return result;
   };
 }
