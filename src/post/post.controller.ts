@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { PostService } from './post.service';
 import { Post as PostModel, PostStatus } from '../generated/prisma/client';
 import paginationHelper, { IOption } from 'src/helpers/paginationHelper';
@@ -61,5 +69,11 @@ export class PostController {
   @Get('/:id')
   getPostById(@Param('id') id: string) {
     return this.postService.getPostById(id);
+  }
+  @Patch('/:id')
+  updatePost(@Body() body: Record<string, any>, @Param('id') id: string) {
+    const userid = 'JuY5S9WEPWr19EHXTennC7LvbBt9ORN8';
+    const isAdmin = true;
+    return this.postService.updatePost(id, userid, isAdmin, body);
   }
 }

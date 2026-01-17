@@ -223,4 +223,30 @@ export class PostService {
       };
     });
   };
+  updatePost = async (
+    id: string,
+    authorID: string,
+    isAdmin: boolean,
+    data: Partial<Post>,
+  ) => {
+    const postDataDB = await prisma.post.findUniqueOrThrow({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        authorID: true,
+      },
+    });
+    if (!isAdmin && postDataDB.authorID !== authorID) {
+      throw new Error('You are not the owner/creator of the post!');
+    }
+    if (!isAdmin) {
+      delete data.isFeatures;
+    }
+    return await prisma.post.update({
+      where: { id },
+      data,
+    });
+  };
 }
