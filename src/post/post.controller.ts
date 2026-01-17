@@ -54,6 +54,10 @@ export class PostController {
 
     return this.postService.getMyPost(id, page, limit, skip);
   }
+  @Get('states')
+  getAdminStates() {
+    return this.postService.getAdminStates();
+  }
   @Get('/:id')
   getPostById(@Param('id') id: string) {
     return this.postService.getPostById(id);

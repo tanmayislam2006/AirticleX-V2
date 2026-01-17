@@ -18,7 +18,10 @@ enum PostStatus {
   PUBLISHED
   ARCHIVED
 }
-
+enum UserRole{
+  ADMIN
+  USER
+}
 enum CommentStatus {
   APPROVED
   REJECT
