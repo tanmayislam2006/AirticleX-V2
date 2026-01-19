@@ -95,4 +95,23 @@ export class CommentsService {
       data,
     });
   };
+  deleteComment = async (authorID: string, commentID: string) => {
+    const isOwner = await prisma.comment.findFirst({
+      where: {
+        id: commentID,
+        authorID,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (!isOwner) {
+      throw new Error('Your provided input is invalid!');
+    }
+    return await prisma.comment.delete({
+      where: {
+        id: commentID,
+      },
+    });
+  };
 }

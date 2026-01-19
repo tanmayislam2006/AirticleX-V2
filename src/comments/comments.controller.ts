@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CommentStatus } from 'src/generated/prisma/enums';
 
@@ -43,5 +51,10 @@ export class CommentsController {
     @Body() data: { content?: string; status?: CommentStatus },
   ) {
     return this.commentService.moderateComment(commentID, data);
+  }
+  @Delete('/:commentID')
+  deleteComment(@Param() commentID: string) {
+    const userID: string = 'JuY5S9WEPWr19EHXTennC7LvbBt9ORN8';
+    return this.commentService.deleteComment(userID, commentID);
   }
 }
