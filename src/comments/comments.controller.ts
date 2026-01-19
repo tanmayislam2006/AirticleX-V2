@@ -37,4 +37,11 @@ export class CommentsController {
     const userID: string = 'JuY5S9WEPWr19EHXTennC7LvbBt9ORN8';
     return this.commentService.updateComment(userID, commentID, data);
   }
+  @Patch('/:commentID/moderate')
+  moderateComment(
+    @Param() commentID: string,
+    @Body() data: { content?: string; status?: CommentStatus },
+  ) {
+    return this.commentService.moderateComment(commentID, data);
+  }
 }

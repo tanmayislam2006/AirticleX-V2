@@ -71,4 +71,28 @@ export class CommentsService {
       data,
     });
   };
+  moderateComment = async (
+    commentID: string,
+    data: { content?: string; status?: CommentStatus },
+  ) => {
+    const isOwner = await prisma.comment.findUniqueOrThrow({
+      where: {
+        id: commentID,
+      },
+      select: {
+        id: true,
+        status: true,
+      },
+    });
+
+    if (isOwner.status === data.status) {
+      throw new Error(`Your provided status ${data.status} is up to date`);
+    }
+    return await prisma.comment.update({
+      where: {
+        id: commentID,
+      },
+      data,
+    });
+  };
 }
