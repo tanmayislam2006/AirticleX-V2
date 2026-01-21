@@ -7,10 +7,18 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PostService } from './post.service';
-import { Post as PostModel, PostStatus } from '../generated/prisma/client';
+import {
+  Post as PostModel,
+  PostStatus,
+  UserRole,
+} from '../generated/prisma/client';
 import paginationHelper, { IOption } from 'src/helpers/paginationHelper';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('api/posts')
 export class PostController {
@@ -18,11 +26,14 @@ export class PostController {
 
   // CREATE POST
   @Post()
+  @UseGuards(AuthGuard)
+  @Roles(UserRole.USER)
   createPost(
     @Body()
     postData: Omit<PostModel, 'id' | 'createdAt' | 'updatedAt' | 'authorID'>,
+    @User() user: any,
   ) {
-    const userID = 'JuY5S9WEPWr19EHXTennC7LvbBt9ORN8';
+    const userID = user.id;
     return this.postService.createPost(postData, userID);
   }
 
